@@ -1,0 +1,21 @@
+#=========================================================
+# OpenShift template parameters for:
+# Component: .
+# Template File: ../openshift/templates/api/api-build.json
+#=========================================================
+NAME=ss-api
+SUFFIX=
+APP_NAME=Sheriff-Scheduling
+APP_GROUP=app-image
+OUTPUT_IMAGE_TAG=latest
+GIT_REPO_URL=https://github.com/bcgov/sheriff-scheduling.git
+GIT_REF=master
+SOURCE_CONTEXT_DIR=
+SOURCE_IMAGE_KIND=DockerImage
+SOURCE_IMAGE_NAME=registry.centos.org/dotnet/dotnet-31-centos7
+SOURCE_IMAGE_TAG=latest
+DOTNET_STARTUP_PROJECT=api/api.csproj
+CPU_REQUEST=10m
+CPU_LIMIT=1
+MEMORY_REQUEST=10Mi
+MEMORY_LIMIT=4Gi

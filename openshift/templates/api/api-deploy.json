@@ -1,0 +1,433 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "${NAME}${SUFFIX}-deployment-template"
+  },
+  "objects": [
+    {
+      "kind": "Secret",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}${SUFFIX}",
+        "labels": {
+          "name": "${NAME}${SUFFIX}",
+          "app": "${APP_NAME}${SUFFIX}",
+          "app-group": "${APP_GROUP}",
+          "role": "${ROLE}",
+          "env": "${TAG_NAME}"
+        }
+      },
+      "stringData": {
+        "api-user": "${USER_ID}",
+        "api-password": "${USER_PASSWORD}",
+        "admin-user": "${ADMIN_USER_ID}",
+        "admin-password": "${ADMIN_PASSWORD}"
+      },
+      "type": "Opaque"
+    },
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}${SUFFIX}",
+        "labels": {
+          "name": "${NAME}${SUFFIX}",
+          "app": "${APP_NAME}${SUFFIX}",
+          "app-group": "${APP_GROUP}",
+          "role": "${ROLE}",
+          "env": "${TAG_NAME}"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "8080-tcp",
+            "port": 8080,
+            "protocol": "TCP",
+            "targetPort": 8080
+          }
+        ],
+        "selector": {
+          "name": "${NAME}${SUFFIX}"
+        }
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}${SUFFIX}",
+        "annotations": {
+          "description": "Defines how to deploy the component"
+        },
+        "labels": {
+          "name": "${NAME}${SUFFIX}",
+          "app": "${APP_NAME}${SUFFIX}",
+          "app-group": "${APP_GROUP}",
+          "role": "${ROLE}",
+          "env": "${TAG_NAME}"
+        }
+      },
+      "spec": {
+        "strategy": {
+          "type": "Rolling"
+        },
+        "triggers": [
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "${NAME}${SUFFIX}"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "namespace": "${IMAGE_NAMESPACE}",
+                "name": "${NAME}:${TAG_NAME}"
+              }
+            }
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "${NAME}${SUFFIX}"
+        },
+        "template": {
+          "metadata": {
+            "name": "${NAME}${SUFFIX}",
+            "labels": {
+              "name": "${NAME}${SUFFIX}",
+              "app": "${APP_NAME}${SUFFIX}",
+              "app-group": "${APP_GROUP}",
+              "role": "${ROLE}",
+              "env": "${TAG_NAME}"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "${NAME}${SUFFIX}",
+                "image": " ",
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "protocol": "TCP"
+                  }
+                ],
+                "readinessProbe": {
+                  "failureThreshold": 5,
+                  "periodSeconds": 30,
+                  "initialDelaySeconds": 3,
+                  "timeoutSeconds": 40,
+                  "httpGet": {
+                    "path": "/api",
+                    "port": 8080
+                  }
+                },
+                "livenessProbe": {
+                  "failureThreshold": 5,
+                  "periodSeconds": 60,
+                  "initialDelaySeconds": 30,
+                  "timeoutSeconds": 40,
+                  "httpGet": {
+                    "path": "/api",
+                    "port": 8080
+                  }
+                },
+                "env": [
+                  {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "${ASPNETCORE_ENVIRONMENT}"
+                  },
+                  {
+                    "name": "ASPNETCORE_URLS",
+                    "value": "${ASPNETCORE_URLS}"
+                  },
+                  {
+                    "name": "CORS_DOMAIN",
+                    "value": "${CORS_DOMAIN}"
+                  },
+                  {
+                    "name": "USE_AUTHENTICATION",
+                    "value": "${USE_AUTHENTICATION}"
+                  },
+                  {
+                    "name": "POSTGRESQL_DATABASE",
+                    "value": "${POSTGRESQL_DATABASE}"
+                  },
+                  {
+                    "name": "POSTGRESQL_USER",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${DB_NAME}${SUFFIX}",
+                        "key": "database-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POSTGRESQL_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${DB_NAME}${SUFFIX}",
+                        "key": "database-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POSTGRESQL_ADMIN_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${DB_NAME}${SUFFIX}",
+                        "key": "admin-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "USER_ID",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "api-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "USER_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "api-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "ADMIN_USER_ID",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "admin-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "ADMIN_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "admin-password"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "${CPU_REQUEST}",
+                    "memory": "${MEMORY_REQUEST}"
+                  },
+                  "limits": {
+                    "cpu": "${CPU_LIMIT}",
+                    "memory": "${MEMORY_LIMIT}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "HorizontalPodAutoscaler",
+      "apiVersion": "autoscaling/v1",
+      "metadata": {
+        "name": "${NAME}${SUFFIX}",
+        "labels": {
+          "name": "${NAME}${SUFFIX}",
+          "app": "${APP_NAME}${SUFFIX}",
+          "app-group": "${APP_GROUP}",
+          "role": "${ROLE}",
+          "env": "${TAG_NAME}"
+        }
+      },
+      "spec": {
+        "scaleTargetRef": {
+          "kind": "DeploymentConfig",
+          "name": "${NAME}${SUFFIX}"
+        },
+        "minReplicas": "${{MIN_REPLICAS}}",
+        "maxReplicas": "${{MAX_REPLICAS}}"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "NAME",
+      "displayName": "Name",
+      "description": "The name assigned to all of the OpenShift resources associated to the server instance.",
+      "required": true,
+      "value": "ss-api"
+    },
+    {
+      "name": "SUFFIX",
+      "displayName": "Suffix",
+      "description": "A name suffix used for all objects",
+      "required": false,
+      "value": ""
+    },
+    {
+      "name": "APP_NAME",
+      "displayName": "App Name",
+      "description": "Used to group components together in the OpenShift console.",
+      "required": true,
+      "value": "Sheriff-Scheduling"
+    },
+    {
+      "name": "APP_GROUP",
+      "displayName": "App Group",
+      "description": "The name assigned to all of the deployments in this project.",
+      "required": true,
+      "value": "ss"
+    },
+    {
+      "name": "ROLE",
+      "displayName": "Role",
+      "description": "The role of this service within the application - used for Network Policies",
+      "required": true,
+      "value": "api"
+    },
+    {
+      "name": "DB_NAME",
+      "displayName": "Database Name",
+      "description": "The name assigned to all of the OpenShift resources associated to the PostgreSQL instance.",
+      "required": true,
+      "value": "postgresql"
+    },
+    {
+      "name": "IMAGE_NAMESPACE",
+      "displayName": "Image Namespace",
+      "required": true,
+      "description": "The namespace of the OpenShift project containing the imagestream for the application.",
+      "value": "jag-shuber-tools"
+    },
+    {
+      "name": "TAG_NAME",
+      "displayName": "Environment TAG name",
+      "description": "The TAG name for this environment, e.g., dev, test, prod",
+      "value": "dev",
+      "required": true
+    },
+    {
+      "name": "ASPNETCORE_ENVIRONMENT",
+      "displayName": "ASP .Net Core Environment",
+      "description": "ASP .Net Core Environment",
+      "required": true,
+      "value": "Production"
+    },
+    {
+      "name": "ASPNETCORE_URLS",
+      "displayName": "ASP .Net Core URLs",
+      "description": "ASP .Net Core URLs",
+      "required": true,
+      "value": "http://+:8080"
+    },
+    {
+      "name": "CORS_DOMAIN",
+      "displayName": "CORS Domain",
+      "description": "CORS Domain",
+      "required": true,
+      "value": "http://localhost:8080"
+    },
+    {
+      "name": "USE_AUTHENTICATION",
+      "displayName": "Use Authentication",
+      "description": "Enable or disable the use of authentication on the API.  When set to `False` the API will be unprotected.",
+      "required": false,
+      "value": ""
+    },
+    {
+      "name": "POSTGRESQL_DATABASE",
+      "displayName": "Postgres database name",
+      "description": "The name of the postgres database used by the api.",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z_][a-zA-Z0-9_]{10}"
+    },
+    {
+      "name": "USER_ID",
+      "displayName": "API Username",
+      "description": "Username for the account that will be used for accessing the API.  Needs to be basee64 encoded.",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z_][a-zA-Z0-9_]{10}"
+    },
+    {
+      "name": "USER_PASSWORD",
+      "displayName": "API Password",
+      "description": "Password for the account that will be used for accessing the API.  Needs to be basee64 encoded.",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]{16}"
+    },
+    {
+      "name": "ADMIN_USER_ID",
+      "displayName": "API Admin Username",
+      "description": "Username for the API superuser account.  Needs to be basee64 encoded.",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z_][a-zA-Z0-9_]{10}"
+    },
+    {
+      "name": "ADMIN_PASSWORD",
+      "displayName": "API Admin Password",
+      "description": "Password for the API superuser account.  Needs to be basee64 encoded.",
+      "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]{16}"
+    },
+    {
+      "name": "MIN_REPLICAS",
+      "displayName": "Minimum Replicas",
+      "description": "The minimum number of pods to have running.",
+      "required": true,
+      "value": "1"
+    },
+    {
+      "name": "MAX_REPLICAS",
+      "displayName": "Maximum Replicas",
+      "description": "The maximum number of pods to have running.",
+      "required": true,
+      "value": "4"
+    },
+    {
+      "name": "CPU_REQUEST",
+      "displayName": "Resources CPU Request",
+      "description": "The resources CPU request (in cores) for this build.",
+      "required": true,
+      "value": "10m"
+    },
+    {
+      "name": "CPU_LIMIT",
+      "displayName": "Resources CPU Limit",
+      "description": "The resources CPU limit (in cores) for this build.",
+      "required": true,
+      "value": "300m"
+    },
+    {
+      "name": "MEMORY_REQUEST",
+      "displayName": "Resources Memory Request",
+      "description": "The resources Memory request (in Mi, Gi, etc) for this build.",
+      "required": true,
+      "value": "10Mi"
+    },
+    {
+      "name": "MEMORY_LIMIT",
+      "displayName": "Resources Memory Limit",
+      "description": "The resources Memory limit (in Mi, Gi, etc) for this build.",
+      "required": true,
+      "value": "256Mi"
+    }
+  ]
+}

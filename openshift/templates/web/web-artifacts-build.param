@@ -1,0 +1,20 @@
+#=========================================================
+# OpenShift template parameters for:
+# Component: .
+# Template File: ../openshift/templates/web/web-artifacts-build.json
+#=========================================================
+NAME=web-artifacts
+SUFFIX=
+APP_NAME=Sheriff-Scheduling
+APP_GROUP=artifact-image
+OUTPUT_IMAGE_TAG=latest
+GIT_REPO_URL=https://github.com/bcgov/sheriff-scheduling.git
+GIT_REF=master
+SOURCE_CONTEXT_DIR=web
+SOURCE_IMAGE_NAMESPACE=jag-shuber-tools
+SOURCE_IMAGE_NAME=nodejs
+SOURCE_IMAGE_TAG=10
+CPU_LIMIT=1
+MEMORY_LIMIT=4Gi
+CPU_REQUEST=250m
+MEMORY_REQUEST=2Gi
