@@ -16,6 +16,7 @@ objects:
         app: ${APP_NAME}
         role: ${ROLE}
         env: ${TAG_NAME}
+        app-group: ${APP_GROUP}
       generation: 1
     spec:
       strategy:
@@ -192,6 +193,11 @@ parameters:
     description: Role
     required: true
     value: db
+  - name: APP_GROUP
+    displayName: App Group
+    description: The name assigned to all of the deployments in this project.
+    required: true
+    value: ss
 
   - name: IMAGE_NAMESPACE
     displayName: Image Namespace

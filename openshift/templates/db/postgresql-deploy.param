@@ -4,8 +4,9 @@
 # Template File: ../openshift/templates/db/postgresql-deploy.yaml
 #=========================================================
 NAME=postgresql
-APP_NAME=sheriff-scheduling
+APP_NAME=Sheriff-Scheduling
 ROLE=db
+APP_GROUP=ss
 IMAGE_NAMESPACE=jag-shuber-tools
 SOURCE_IMAGE_NAME=postgresql
 TAG_NAME=dev
