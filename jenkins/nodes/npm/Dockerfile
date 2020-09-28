@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7:v3.11
 
 LABEL \
     io.k8s.display-name="Jenkins Agent Nodejs" \
-    io.k8s.description="The jenkins agent nodejs image has the nodejs tools on top of the jenkins slave base image." \
+    io.k8s.description="The jenkins agent nodejs image has the nodejs tools on top of the jenkins agent base image." \
     io.openshift.tags="openshift,jenkins,agent,nodejs"
 
 ARG NODE_VERSION=v10.20.1
