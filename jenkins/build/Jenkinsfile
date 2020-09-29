@@ -1,0 +1,205 @@
+def RELEASE_VERSION = "1.0"
+
+pipeline {
+  agent any
+  options {
+    disableResume()
+    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+  }
+  environment {
+    CI = "true"
+
+    // The name of the project namespace(s).
+    NAME_SPACE = "jag-shuber"
+
+    // This should match your monorepo folder structure
+    API_DIRECTORY = "api"
+    FRONTEND_DIRECTORY = "web"
+    SOURCE_DIRECTORY = "ScheriffSchedulingSrc"
+
+    // SonarQube configuration
+    SONARQUBE_URL_INT = "http://sonarqube:9000"
+
+    // The URI to the application being deployed.
+    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://web-jag-shuber-dev.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
+    OC_JOB_NAME = sh(script: 'echo "${OC_JOB_NAME:-dev}"', returnStdout: true).trim()
+    ENABLE_VERSION_PROMPT = sh(script: 'echo "${ENABLE_VERSION_PROMPT:-false}"', returnStdout: true).trim()
+    SOURCE_REPO = sh(script: 'echo "${SOURCE_REPO:-https://github.com/bcgov/sheriff-scheduling.git}"', returnStdout: true).trim()
+    SOURCE_REPO_BRANCH = sh(script: 'echo "${SOURCE_REPO_BRANCH:-scaffold}"', returnStdout: true).trim()
+  }
+
+  stages {
+    stage("Version Prompt") {
+      when {
+        anyOf {
+          expression { env.GIT_BRANCH == "origin/release" }
+          expression { new Boolean(env.ENABLE_VERSION_PROMPT) }
+        }
+      }
+      steps {
+        script {
+          timeout(time: 5, unit: "MINUTES") {
+            def version = input(message: "Enter the version tag for this release", parameters: [
+              string(name: "RELEASE VERSION", defaultValue: "", description: "")
+            ])
+            if (version != "") {
+              RELEASE_VERSION = version
+            } else {
+              error "***  No release version specified. Aborting pipeline.  ***"
+            }
+          }
+        }
+      }
+    }
+
+    stage('Build') {
+      when {
+        expression { new Boolean(env.SKIP_BUILD) == false }
+      }
+      failFast true
+      options {
+        timeout(time: 20, unit: 'MINUTES') 
+      }
+      parallel {
+        stage("Build Frontend") {
+          steps {
+            script {
+              sh """ 
+                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web-artifacts -apply
+                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web -apply
+              """
+            }
+          }
+        }
+        stage("Build Backend") {
+          steps {
+            script {
+              sh """
+                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build ss-api -apply
+              """
+            }
+          }
+        }
+      }
+    }
+
+    stage("Deploy") {
+      when {
+        expression { new Boolean(env.SKIP_BUILD) == false }
+      }
+      options {
+        timeout(time: 10, unit: 'MINUTES') 
+      }
+      steps {
+        script {
+          def img_backend = "ss-api"
+          def img_frontend = "web"
+
+          // tag release version (if provided)
+          if (RELEASE_VERSION != "") {
+            echo "Tagging images - ${img_backend}:latest, ${img_frontend}:latest..."
+            sh "oc tag ${img_backend}:latest ${img_backend}:${RELEASE_VERSION}"
+            sh "oc tag ${img_frontend}:latest ${img_frontend}:${RELEASE_VERSION}"
+          } else {
+            RELEASE_VERSION = "latest"
+          }
+
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy ss-api ${OC_JOB_NAME} -apply"
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy web ${OC_JOB_NAME} -apply"
+        }
+      }
+    }
+
+    
+    // The ZAP scripts are installed on the root of the jenkins-slave-zap image.
+    // When running ZAP from there the reports will be created in /zap/wrk/ by default.
+    // ZAP has problems with creating the reports directly in the Jenkins
+    // working directory, so they have to be copied over after the fact.
+    stage('OWASP Scan') {
+      agent { label 'owasp-zap' }
+      options {
+        timeout(time: 25, unit: 'MINUTES') 
+      }
+      steps {
+        retry(3) {
+          script {
+            sh "mkdir -p zap-output"
+            def return_code = sh returnStatus: true, script: "/zap/zap-baseline.py -x zap-report.xml -r zap-report.html -t $VANITY_URL -d"
+            sh "cp /zap/wrk/zap-report.* ./zap-output/"
+            echo "Exit value was - $return_code"
+          }
+        }
+      }
+      post {
+        always {
+          publishHTML([
+            allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true,
+            reportDir: '/zap/wrk', reportFiles: 'zap-report.html', reportName: 'OWASP ZAP Scan', reportTitles: 'OWASP ZAP Scan'
+          ])
+          stash name: "zap", includes: "zap-output/*"
+        }
+      }
+    }
+
+    stage('Reports') {
+      failFast true
+      options {
+        timeout(time: 15, unit: 'MINUTES') 
+      }
+      parallel {
+        stage("Web Reports") {
+          agent { label 'jenkins-slave-npm' }
+          steps {
+            script {
+              // pull code
+              checkout([  
+                $class: 'GitSCM',
+                branches: [[name: "*/${SOURCE_REPO_BRANCH}"]],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${SOURCE_DIRECTORY}"]],
+                submoduleCfg: [],
+                userRemoteConfigs: [[url: "${SOURCE_REPO}"]]
+              ])
+              echo 'Preparing the report for the publishing ...'
+              unstash name: "zap"
+
+              sh """
+                SONAR_URL=${SONARQUBE_URL_INT} ZAP_REPORT=${WORKSPACE}/zap-output/zap-report.xml ./player.sh scan ${OC_JOB_NAME} -apply
+              """
+              echo 'Frontend reports passed'
+            }
+          }
+          post {
+            failure {
+              error '*** Frontend reports failed ***'
+            }
+          }
+        }
+        stage("Backend Reports") {
+          agent { label 'jenkins-slave-dotnet' }
+          steps {
+            script {
+              checkout([  
+                $class: 'GitSCM',
+                branches: [[name: "*/${SOURCE_REPO_BRANCH}"]],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${SOURCE_DIRECTORY}"]],
+                submoduleCfg: [],
+                userRemoteConfigs: [[url: "${SOURCE_REPO}"]]
+              ])
+              sh """
+                SONAR_URL=${SONARQUBE_URL_INT} ./player.sh scan-dotnet ${OC_JOB_NAME} -apply
+              """
+              echo 'Backend reports passed'
+            }
+          }
+          post {
+            failure {
+              error '*** Backend reports failed ***'
+            }
+          }
+        }
+      }
+    }
+  }
+}

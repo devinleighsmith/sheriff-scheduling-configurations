@@ -7,6 +7,12 @@ tmp
 *.pem
 *.key
 
+*.orig
+*_BACKUP*
+*_BASE*
+*_LOCAL*
+*_REMOTE*
+
 *.local.*
 
 # General
