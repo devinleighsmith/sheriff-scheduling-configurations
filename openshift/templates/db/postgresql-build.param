@@ -4,7 +4,7 @@
 # Template File: ../openshift/templates/db/postgresql-build.json
 #=========================================================
 NAME=postgresql
-APP_NAME=Sheriff Scheduling
+APP_NAME=Sheriff-Scheduling
 APP_GROUP=ss
 OUTPUT_IMAGE_TAG=latest
 SOURCE_IMAGE_KIND=DockerImage
