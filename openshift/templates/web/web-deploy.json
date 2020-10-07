@@ -101,28 +101,6 @@
                   {
                     "name": "IpFilterRules",
                     "value": "${IpFilterRules}"
-                  },
-                  {
-                    "name": "HTTP_BASIC",
-                    "value": "${HTTP_BASIC}"
-                  },
-                  {
-                    "name": "HTTP_BASIC_USERNAME",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "${API_SERVICE_NAME}",
-                        "key": "api-user"
-                      }
-                    }
-                  },
-                  {
-                    "name": "HTTP_BASIC_PASSWORD",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "${API_SERVICE_NAME}",
-                        "key": "api-password"
-                      }
-                    }
                   }
                 ],
                 "resources": {
@@ -394,7 +372,7 @@
       "description": "The default URL to use when proxying requests to the application's API.  The value here will be overridden if a API_SERVICE_NAME is defined.",
       "displayName": "API URL",
       "name": "API_URL",
-      "required": true,
+      "required": false,
       "value": ""
     },
     {
@@ -467,12 +445,6 @@
       "displayName": "Env TAG name",
       "name": "TAG_NAME",
       "value": "dev"
-    },
-    {
-      "description": "For very simple HTTP Basic authentication, use %HTTP_BASIC% in your nginx config and provide the value here that you want in nginx config, e.g., `auth_basic 'restricted';`",
-      "displayName": "HTTP Basic Nginx Config Line",
-      "name": "HTTP_BASIC",
-      "value": ""
     },
     {
       "name": "MIN_REPLICAS",

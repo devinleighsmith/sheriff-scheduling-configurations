@@ -12,19 +12,19 @@ fi
 # ================================================================================================================
 
 if createOperation; then
-  # Randomly generate a set of credentials without asking ...
-  printStatusMsg "Creating a set of random user credentials ..."
-  writeParameter "USER_ID" $(generateUsername) "false"
-  writeParameter "USER_PASSWORD" $(generatePassword) "false"
-  writeParameter "ADMIN_USER_ID" $(generateUsername) "false"
-  writeParameter "ADMIN_PASSWORD" $(generatePassword) "false"
+  # Prompts
+  readParameter "LOCATION_SERVICES_CLIENT_URL - Please provide the endpoint (URL) for the Location Services API." LOCATION_SERVICES_CLIENT_URL "false" 
+  readParameter "LOCATION_SERVICES_CLIENT_USERNAME - Please provide the username to use with the Location Services API." LOCATION_SERVICES_CLIENT_USERNAME "false" 
+  readParameter "LOCATION_SERVICES_CLIENT_PASSWORD - Please provide the password to use with the Location Services API." LOCATION_SERVICES_CLIENT_PASSWORD "false" 
+  readParameter "KEYCLOAK_AUTHORITY - Please provide the endpoint (URL) for the OIDC relaying party." KEYCLOAK_AUTHORITY "false" 
+  readParameter "KEYCLOAK_SECRET - Please provide the API secret toi use with the OIDC relaying party." KEYCLOAK_SECRET "false" 
 else
-  # Secrets are removed from the configurations during update operations ...
-  printStatusMsg "Update operation detected ...\nSkipping the generation of random user credentials.\n"
-  writeParameter "USER_ID" "generation_skipped" "false"
-  writeParameter "USER_PASSWORD" "generation_skipped" "false"
-  writeParameter "ADMIN_USER_ID" "generation_skipped" "false"
-  writeParameter "ADMIN_PASSWORD" "generation_skipped" "false"
+  printStatusMsg "Update operation detected ...\nSkipping the prompts for LOCATION_SERVICES_CLIENT_URL, LOCATION_SERVICES_CLIENT_USERNAME, LOCATION_SERVICES_CLIENT_PASSWORD, KEYCLOAK_AUTHORITY, and KEYCLOAK_SECRET ...\n"
+  writeParameter "LOCATION_SERVICES_CLIENT_URL" "prompt_skipped" "false"
+  writeParameter "LOCATION_SERVICES_CLIENT_USERNAME" "prompt_skipped" "false"
+  writeParameter "LOCATION_SERVICES_CLIENT_PASSWORD" "prompt_skipped" "false"
+  writeParameter "KEYCLOAK_AUTHORITY" "prompt_skipped" "false"
+  writeParameter "KEYCLOAK_SECRET" "prompt_skipped" "false"
 fi
 
 SPECIALDEPLOYPARMS="--param-file=${_overrideParamFile}"

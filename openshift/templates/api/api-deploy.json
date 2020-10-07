@@ -19,10 +19,13 @@
         }
       },
       "stringData": {
-        "api-user": "${USER_ID}",
-        "api-password": "${USER_PASSWORD}",
-        "admin-user": "${ADMIN_USER_ID}",
-        "admin-password": "${ADMIN_PASSWORD}"
+        "location-services-client-username": "${LOCATION_SERVICES_CLIENT_USERNAME}",
+        "location-services-client-password": "${LOCATION_SERVICES_CLIENT_PASSWORD}",
+        "location-services-client-url": "${LOCATION_SERVICES_CLIENT_URL}",
+        "keycloak-client": "${KEYCLOAK_CLIENT}",
+        "keycloak-authority": "${KEYCLOAK_AUTHORITY}",
+        "keycloak-secret": "${KEYCLOAK_SECRET}",
+        "keycloak-audience": "${KEYCLOAK_AUDIENCE}"
       },
       "type": "Opaque"
     },
@@ -152,73 +155,74 @@
                     "value": "${CORS_DOMAIN}"
                   },
                   {
-                    "name": "USE_AUTHENTICATION",
-                    "value": "${USE_AUTHENTICATION}"
-                  },
-                  {
-                    "name": "POSTGRESQL_DATABASE",
-                    "value": "${POSTGRESQL_DATABASE}"
-                  },
-                  {
-                    "name": "POSTGRESQL_USER",
+                    "name": "DatabaseConnectionString",
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${DB_NAME}${SUFFIX}",
-                        "key": "database-user"
+                        "key": "database-connection-string"
                       }
                     }
                   },
                   {
-                    "name": "POSTGRESQL_PASSWORD",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "${DB_NAME}${SUFFIX}",
-                        "key": "database-password"
-                      }
-                    }
-                  },
-                  {
-                    "name": "POSTGRESQL_ADMIN_PASSWORD",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "${DB_NAME}${SUFFIX}",
-                        "key": "admin-password"
-                      }
-                    }
-                  },
-                  {
-                    "name": "USER_ID",
+                    "name": "LocationServicesClient__Username",
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${NAME}${SUFFIX}",
-                        "key": "api-user"
+                        "key": "location-services-client-username"
                       }
                     }
                   },
                   {
-                    "name": "USER_PASSWORD",
+                    "name": "LocationServicesClient__Password",
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${NAME}${SUFFIX}",
-                        "key": "api-password"
+                        "key": "location-services-client-password"
                       }
                     }
                   },
                   {
-                    "name": "ADMIN_USER_ID",
+                    "name": "LocationServicesClient__Url",
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${NAME}${SUFFIX}",
-                        "key": "admin-user"
+                        "key": "location-services-client-url"
                       }
                     }
                   },
                   {
-                    "name": "ADMIN_PASSWORD",
+                    "name": "Keycloak__Client",
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${NAME}${SUFFIX}",
-                        "key": "admin-password"
+                        "key": "keycloak-client"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Keycloak__Authority",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "keycloak-authority"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Keycloak__Secret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "keycloak-secret"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Keycloak__Audience",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "keycloak-audience"
                       }
                     }
                   }
@@ -298,13 +302,7 @@
       "required": true,
       "value": "api"
     },
-    {
-      "name": "DB_NAME",
-      "displayName": "Database Name",
-      "description": "The name assigned to all of the OpenShift resources associated to the PostgreSQL instance.",
-      "required": true,
-      "value": "postgresql"
-    },
+
     {
       "name": "IMAGE_NAMESPACE",
       "displayName": "Image Namespace",
@@ -318,6 +316,15 @@
       "description": "The TAG name for this environment, e.g., dev, test, prod",
       "value": "dev",
       "required": true
+    },
+
+    
+    {
+      "name": "DB_NAME",
+      "displayName": "Database Name",
+      "description": "The name assigned to all of the OpenShift resources associated to the PostgreSQL instance.",
+      "required": true,
+      "value": "postgresql"
     },
     {
       "name": "ASPNETCORE_ENVIRONMENT",
@@ -340,53 +347,65 @@
       "required": true,
       "value": "http://localhost:8080"
     },
+
+
+
+
     {
-      "name": "USE_AUTHENTICATION",
-      "displayName": "Use Authentication",
-      "description": "Enable or disable the use of authentication on the API.  When set to `False` the API will be unprotected.",
+      "name": "LOCATION_SERVICES_CLIENT_USERNAME",
+      "displayName": "Location Services Client Username",
+      "description": "Location Services Client Username.",
       "required": false,
       "value": ""
     },
     {
-      "name": "POSTGRESQL_DATABASE",
-      "displayName": "Postgres database name",
-      "description": "The name of the postgres database used by the api.",
-      "required": true,
-      "generate": "expression",
-      "from": "[a-zA-Z_][a-zA-Z0-9_]{10}"
+      "name": "LOCATION_SERVICES_CLIENT_PASSWORD",
+      "displayName": "Location Services Client Password",
+      "description": "Location Services Client Password.",
+      "required": false,
+      "value": ""
     },
     {
-      "name": "USER_ID",
-      "displayName": "API Username",
-      "description": "Username for the account that will be used for accessing the API.  Needs to be basee64 encoded.",
-      "required": true,
-      "generate": "expression",
-      "from": "[a-zA-Z_][a-zA-Z0-9_]{10}"
+      "name": "LOCATION_SERVICES_CLIENT_URL",
+      "displayName": "Location Services Client URL",
+      "description": "Location services API base URL.",
+      "required": false,
+      "value": ""
+    },
+
+
+    {
+      "name": "KEYCLOAK_CLIENT",
+      "displayName": "KeyCloak Client",
+      "description": "KeyCloak Client",
+      "required": false,
+      "value": "ss-api"
     },
     {
-      "name": "USER_PASSWORD",
-      "displayName": "API Password",
-      "description": "Password for the account that will be used for accessing the API.  Needs to be basee64 encoded.",
-      "required": true,
-      "generate": "expression",
-      "from": "[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]{16}"
+      "name": "KEYCLOAK_AUDIENCE",
+      "displayName": "KeyCloak Audience",
+      "description": "KeyCloak Audience",
+      "required": false,
+      "value": "ss-api"
     },
+
     {
-      "name": "ADMIN_USER_ID",
-      "displayName": "API Admin Username",
-      "description": "Username for the API superuser account.  Needs to be basee64 encoded.",
-      "required": true,
-      "generate": "expression",
-      "from": "[a-zA-Z_][a-zA-Z0-9_]{10}"
+      "name": "KEYCLOAK_AUTHORITY",
+      "displayName": "KeyCloak Authority",
+      "description": "The URL to the KeyCloak authorization endpoint.",
+      "required": false,
+      "value": ""
     },
+
     {
-      "name": "ADMIN_PASSWORD",
-      "displayName": "API Admin Password",
-      "description": "Password for the API superuser account.  Needs to be basee64 encoded.",
-      "required": true,
-      "generate": "expression",
-      "from": "[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]{16}"
+      "name": "KEYCLOAK_SECRET",
+      "displayName": "KeyCloak Secret",
+      "description": "KeyCloak API Secret",
+      "required": false,
+      "value": ""
     },
+
+
     {
       "name": "MIN_REPLICAS",
       "displayName": "Minimum Replicas",
