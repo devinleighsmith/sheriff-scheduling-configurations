@@ -12,19 +12,46 @@ fi
 # ================================================================================================================
 
 if createOperation; then
-  # Prompts
-  readParameter "LOCATION_SERVICES_CLIENT_URL - Please provide the endpoint (URL) for the Location Services API." LOCATION_SERVICES_CLIENT_URL "false" 
-  readParameter "LOCATION_SERVICES_CLIENT_USERNAME - Please provide the username to use with the Location Services API." LOCATION_SERVICES_CLIENT_USERNAME "false" 
-  readParameter "LOCATION_SERVICES_CLIENT_PASSWORD - Please provide the password to use with the Location Services API." LOCATION_SERVICES_CLIENT_PASSWORD "false" 
-  readParameter "KEYCLOAK_AUTHORITY - Please provide the endpoint (URL) for the OIDC relaying party." KEYCLOAK_AUTHORITY "false" 
-  readParameter "KEYCLOAK_SECRET - Please provide the API secret toi use with the OIDC relaying party." KEYCLOAK_SECRET "false" 
+  # Generate a random encryption key
+  printStatusMsg "Creating a set of random keys ..."
+  writeParameter "DATA_PROTECTION_ENCRYPTION_KEY" $(generateKey 32) "false"
+
+  # Get Location Services settings
+  readParameter "LOCATION_SERVICES_CLIENT_URL - Please provide the endpoint (URL) for the Location Services API." LOCATION_SERVICES_CLIENT_URL "" "false" 
+  readParameter "LOCATION_SERVICES_CLIENT_USERNAME - Please provide the username to use with the Location Services API." LOCATION_SERVICES_CLIENT_USERNAME "" "false" 
+  readParameter "LOCATION_SERVICES_CLIENT_PASSWORD - Please provide the password to use with the Location Services API." LOCATION_SERVICES_CLIENT_PASSWORD "" "false" 
+
+  # Get KeyCloak settings
+  readParameter "KEYCLOAK_AUTHORITY - Please provide the endpoint (URL) for the OIDC relaying party." KEYCLOAK_AUTHORITY "" "false" 
+  readParameter "KEYCLOAK_SECRET - Please provide the API secret toi use with the OIDC relaying party." KEYCLOAK_SECRET "" "false" 
+
+  # Get the email settings
+  readParameter "EMAIL_SERVICE_URL - Please provide the url for the CHES email api.  The default is a blank string." EMAIL_SERVICE_URL "" "false"  
+  readParameter "EMAIL_SERVICE_AUTH_URL - Please provide the url for the CHES authentication endpoint.  The default is a blank string." EMAIL_SERVICE_AUTH_URL "" "false"
+  readParameter "EMAIL_SERVICE_CLIENT_ID - Please provide the service client id for sending access request emails.  The default is a blank string." EMAIL_SERVICE_CLIENT_ID "" "false"
+  readParameter "EMAIL_SERVICE_CLIENT_SECRET - Please provide the service client secret to use with above id.  The default is a blank string." EMAIL_SERVICE_CLIENT_SECRET "" "false"
+  readParameter "SENDER_EMAIL - Please provide the email address used for sending access request emails.  The default is a blank string." SENDER_EMAIL "" "false"
+  readParameter "SENDER_NAME - Please provide the name to use with the above email address.  The default is a blank string." SENDER_NAME "" "false"
+  readParameter "REQUEST_ACCESS_EMAIL - Please provide the email address used for receiving access request emails.  The default is a blank string." REQUEST_ACCESS_EMAIL "" "false"
 else
-  printStatusMsg "Update operation detected ...\nSkipping the prompts for LOCATION_SERVICES_CLIENT_URL, LOCATION_SERVICES_CLIENT_USERNAME, LOCATION_SERVICES_CLIENT_PASSWORD, KEYCLOAK_AUTHORITY, and KEYCLOAK_SECRET ...\n"
+  printStatusMsg "Update operation detected ...\nSkipping the generation of keys ...\n"
+  writeParameter "DATA_PROTECTION_ENCRYPTION_KEY" "generation_skipped" "false"
+
+  printStatusMsg "Update operation detected ...\nSkipping the prompts for LOCATION_SERVICES_CLIENT_URL, LOCATION_SERVICES_CLIENT_USERNAME, LOCATION_SERVICES_CLIENT_PASSWORD, KEYCLOAK_AUTHORITY, KEYCLOAK_SECRET, EMAIL_SERVICE_URL, EMAIL_SERVICE_AUTH_URL, EMAIL_SERVICE_CLIENT_ID, EMAIL_SERVICE_CLIENT_SECRET, SENDER_EMAIL, SENDER_NAME, and REQUEST_ACCESS_EMAIL ...\n"
   writeParameter "LOCATION_SERVICES_CLIENT_URL" "prompt_skipped" "false"
   writeParameter "LOCATION_SERVICES_CLIENT_USERNAME" "prompt_skipped" "false"
   writeParameter "LOCATION_SERVICES_CLIENT_PASSWORD" "prompt_skipped" "false"
+  
   writeParameter "KEYCLOAK_AUTHORITY" "prompt_skipped" "false"
   writeParameter "KEYCLOAK_SECRET" "prompt_skipped" "false"
+
+  writeParameter "EMAIL_SERVICE_URL" "prompt_skipped" "false"
+  writeParameter "EMAIL_SERVICE_AUTH_URL" "prompt_skipped" "false"
+  writeParameter "EMAIL_SERVICE_CLIENT_ID" "prompt_skipped" "false"
+  writeParameter "EMAIL_SERVICE_CLIENT_SECRET" "prompt_skipped" "false"
+  writeParameter "SENDER_EMAIL" "prompt_skipped" "false"
+  writeParameter "SENDER_NAME" "prompt_skipped" "false"
+  writeParameter "REQUEST_ACCESS_EMAIL" "prompt_skipped" "false"
 fi
 
 SPECIALDEPLOYPARMS="--param-file=${_overrideParamFile}"
