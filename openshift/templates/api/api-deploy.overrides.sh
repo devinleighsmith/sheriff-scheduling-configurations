@@ -14,7 +14,7 @@ fi
 if createOperation; then
   # Generate a random encryption key
   printStatusMsg "Creating a set of random keys ..."
-  writeParameter "DATA_PROTECTION_ENCRYPTION_KEY" $(generateKey 32) "false"
+  writeParameter "DATA_PROTECTION_ENCRYPTION_KEY" $(generateKey 32 | fold -w 32 | head -n 1) "false"
 
   # Get Location Services settings
   readParameter "LOCATION_SERVICES_CLIENT_URL - Please provide the endpoint (URL) for the Location Services API." LOCATION_SERVICES_CLIENT_URL "" "false" 
