@@ -14,6 +14,7 @@
 # API_URL=
 # API_SERVICE_NAME=ss-api
 # API_PATH=/api
+# WEB_BASE_HREF=/sheriff-scheduling/
 # AdditionalRealIpFromRules=
 # IpFilterRules=
 # NGINX_CONF_TEMPLATE_FILE_NAME=nginx.conf.template

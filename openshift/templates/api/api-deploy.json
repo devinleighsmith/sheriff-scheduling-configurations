@@ -305,6 +305,10 @@
                         "key": "request-access-email"
                       }
                     }
+                  },
+                  {
+                    "name": "WebBaseHref",
+                    "value": "${WEB_BASE_HREF}"
                   }
                 ],
                 "resources": {
@@ -528,6 +532,12 @@
       "description": "Request Access Email Address",
       "required": false,
       "value": ""
+    },
+    {
+      "name": "WEB_BASE_HREF",
+      "displayName": "Web Base Href",
+      "description": "The application host path (Web Base Href).",
+      "value": "/sheriff-scheduling/"
     },
     {
       "name": "MIN_REPLICAS",
