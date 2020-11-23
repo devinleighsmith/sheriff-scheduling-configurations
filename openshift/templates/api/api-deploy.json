@@ -305,6 +305,10 @@
                         "key": "request-access-email"
                       }
                     }
+                  },
+                  {
+                    "name": "WebBaseHref",
+                    "value": "${WEB_BASE_HREF}"
                   }
                 ],
                 "resources": {
@@ -530,18 +534,24 @@
       "value": ""
     },
     {
+      "name": "WEB_BASE_HREF",
+      "displayName": "Web Base Href",
+      "description": "The application host path (Web Base Href).",
+      "value": "/sheriff-scheduling/"
+    },
+    {
       "name": "MIN_REPLICAS",
       "displayName": "Minimum Replicas",
       "description": "The minimum number of pods to have running.",
       "required": true,
-      "value": "1"
+      "value": "3"
     },
     {
       "name": "MAX_REPLICAS",
       "displayName": "Maximum Replicas",
       "description": "The maximum number of pods to have running.",
       "required": true,
-      "value": "4"
+      "value": "6"
     },
     {
       "name": "CPU_REQUEST",

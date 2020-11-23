@@ -55,11 +55,15 @@ http {
     # HTTP Basic rules
     auth_basic_user_file /tmp/.htpasswd;
 
-    # Set variable for API proxy
+    # ======================================================
+    # Set variables for API proxy
+    # ------------------------------------------------------
+    # Ensure the original scheme is forwarded correctly
     map $http_x_forwarded_proto $proxy_scheme {
         default $scheme;
         https "https";
     }
+    # Ensure the original port is forwarded correctly
     map $http_x_forwarded_port $proxy_port {
         default $http_x_forwarded_port;
         '' $server_port;
@@ -74,11 +78,13 @@ http {
         default $http_x_forwarded_server;
         '' $host;
     }
+    # ======================================================
 
     server {
-        listen       8080;
-        server_name  localhost;
-
+        %LISTEN_CONFIG_SECTION%
+        
+        # Allow large headers.
+        large_client_header_buffers 4 32k;
         # add in most common security headers
         add_header Content-Security-Policy "default-src * data: blob: filesystem: 'unsafe-inline' 'unsafe-eval'";
         add_header Strict-Transport-Security "max-age=86400; includeSubDomains";
