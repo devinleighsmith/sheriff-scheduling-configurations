@@ -1,24 +1,24 @@
-def RELEASE_VERSION = "1.0"
+def RELEASE_VERSION = '1.0'
 
 pipeline {
   agent any
   options {
     disableResume()
-    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+    buildDiscarder(logRotator(numToKeepStr: '5')) // keep 5 builds only
   }
   environment {
-    CI = "true"
+    CI = 'true'
 
     // The name of the project namespace(s).
-    NAME_SPACE = "jag-shuber"
+    NAME_SPACE = 'jag-shuber'
 
     // This should match your monorepo folder structure
-    API_DIRECTORY = "api"
-    FRONTEND_DIRECTORY = "web"
-    SOURCE_DIRECTORY = "ScheriffSchedulingSrc"
+    API_DIRECTORY = 'api'
+    FRONTEND_DIRECTORY = 'web'
+    SOURCE_DIRECTORY = 'ScheriffSchedulingSrc'
 
     // SonarQube configuration
-    SONARQUBE_URL_INT = "http://sonarqube:9000"
+    SONARQUBE_URL_INT = 'http://sonarqube:9000'
 
     // The URI to the application being deployed.
     VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://web-jag-shuber-dev.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
@@ -29,23 +29,47 @@ pipeline {
   }
 
   stages {
-    stage("Version Prompt") {
+    stage('Initialize') {
+      steps {
+        script {
+          // load supporting functions from external script files
+          commonPipeline = load 'scripts/common.groovy'
+          notify = load 'scripts/notify.groovy'
+
+          // Cancel any running builds in progress
+          timeout(time: 10, unit: 'MINUTES') {
+            echo 'Cancelling previous builds in progress...'
+            commonPipeline.abortAllPreviousBuildsInProgress(currentBuild)
+          }
+
+          // ensure required secrets and credentials are available in the CI environment
+          // [add more secrets here if needed...]
+          sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
+          env.ROCKET_DEPLOY_WEBHOOK = readFile('rocket-deploy-webhook').trim()
+          echo env.ROCKET_DEPLOY_WEBHOOK
+
+          // whether runtime build should be skipped
+          env.RUNTIME_CHANGES = commonPipeline.hasDirectoryChanged('openshift/templates/web').toString()
+        }
+      }
+    }
+    stage('Version Prompt') {
       when {
         anyOf {
-          expression { env.GIT_BRANCH == "origin/release" }
+          expression { env.GIT_BRANCH == 'origin/release' }
           expression { new Boolean(env.ENABLE_VERSION_PROMPT) }
         }
       }
       steps {
         script {
-          timeout(time: 5, unit: "MINUTES") {
-            def version = input(message: "Enter the version tag for this release", parameters: [
-              string(name: "RELEASE VERSION", defaultValue: "", description: "")
+          timeout(time: 5, unit: 'MINUTES') {
+            def version = input(message: 'Enter the version tag for this release', parameters: [
+              string(name: 'RELEASE VERSION', defaultValue: '', description: '')
             ])
-            if (version != "") {
+            if (version != '') {
               RELEASE_VERSION = version
             } else {
-              error "***  No release version specified. Aborting pipeline.  ***"
+              error '***  No release version specified. Aborting pipeline.  ***'
             }
           }
         }
@@ -58,21 +82,28 @@ pipeline {
       }
       failFast true
       options {
-        timeout(time: 20, unit: 'MINUTES') 
+        timeout(time: 20, unit: 'MINUTES')
       }
       parallel {
-        stage("Build Frontend") {
+        stage('Build Frontend') {
           steps {
             script {
-              sh """ 
-                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web-runtime -apply
-                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web-artifacts -apply
-                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web -apply
-              """
+              if (env.RUNTIME_CHANGES.equalsIgnoreCase('false')) {
+                sh """
+                  OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web-artifacts -apply
+                  OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web -apply
+                """
+              } else {
+                sh """
+                  OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web-runtime -apply
+                  OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web-artifacts -apply
+                  OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build web -apply
+                """
+              }
             }
           }
         }
-        stage("Build Backend") {
+        stage('Build Backend') {
           steps {
             script {
               sh """
@@ -84,25 +115,25 @@ pipeline {
       }
     }
 
-    stage("Deploy") {
+    stage('Deploy') {
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
       }
       options {
-        timeout(time: 10, unit: 'MINUTES') 
+        timeout(time: 10, unit: 'MINUTES')
       }
       steps {
         script {
-          def img_backend = "ss-api"
-          def img_frontend = "web"
+          def img_backend = 'ss-api'
+          def img_frontend = 'web'
 
           // tag release version (if provided)
-          if (RELEASE_VERSION != "") {
+          if (RELEASE_VERSION != '') {
             echo "Tagging images - ${img_backend}:latest, ${img_frontend}:latest..."
             sh "oc tag ${img_backend}:latest ${img_backend}:${RELEASE_VERSION}"
             sh "oc tag ${img_frontend}:latest ${img_frontend}:${RELEASE_VERSION}"
           } else {
-            RELEASE_VERSION = "latest"
+            RELEASE_VERSION = 'latest'
           }
 
           sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy ss-api ${OC_JOB_NAME} -apply"
@@ -111,7 +142,6 @@ pipeline {
       }
     }
 
-    
     // The ZAP scripts are installed on the root of the jenkins-slave-zap image.
     // When running ZAP from there the reports will be created in /zap/wrk/ by default.
     // ZAP has problems with creating the reports directly in the Jenkins
@@ -119,14 +149,14 @@ pipeline {
     stage('OWASP Scan') {
       agent { label 'owasp-zap' }
       options {
-        timeout(time: 25, unit: 'MINUTES') 
+        timeout(time: 25, unit: 'MINUTES')
       }
       steps {
         retry(3) {
           script {
-            sh "mkdir -p zap-output"
+            sh 'mkdir -p zap-output'
             def return_code = sh returnStatus: true, script: "/zap/zap-baseline.py -x zap-report.xml -r zap-report.html -t $VANITY_URL -d"
-            sh "cp /zap/wrk/zap-report.* ./zap-output/"
+            sh 'cp /zap/wrk/zap-report.* ./zap-output/'
             echo "Exit value was - $return_code"
           }
         }
@@ -137,7 +167,7 @@ pipeline {
             allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true,
             reportDir: '/zap/wrk', reportFiles: 'zap-report.html', reportName: 'OWASP ZAP Scan', reportTitles: 'OWASP ZAP Scan'
           ])
-          stash name: "zap", includes: "zap-output/*"
+          stash name: 'zap', includes: 'zap-output/*'
         }
       }
     }
@@ -145,15 +175,15 @@ pipeline {
     stage('Reports') {
       failFast true
       options {
-        timeout(time: 15, unit: 'MINUTES') 
+        timeout(time: 15, unit: 'MINUTES')
       }
       parallel {
-        stage("Web Reports") {
+        stage('Web Reports') {
           agent { label 'jenkins-slave-npm' }
           steps {
             script {
               // pull code
-              checkout([  
+              checkout([
                 $class: 'GitSCM',
                 branches: [[name: "*/${SOURCE_REPO_BRANCH}"]],
                 doGenerateSubmoduleConfigurations: false,
@@ -162,7 +192,7 @@ pipeline {
                 userRemoteConfigs: [[url: "${SOURCE_REPO}"]]
               ])
               echo 'Preparing the report for the publishing ...'
-              unstash name: "zap"
+              unstash name: 'zap'
 
               sh """
                 SONAR_URL=${SONARQUBE_URL_INT} ZAP_REPORT=${WORKSPACE}/zap-output/zap-report.xml ./player.sh scan ${OC_JOB_NAME} -apply
@@ -176,11 +206,11 @@ pipeline {
             }
           }
         }
-        stage("Backend Reports") {
+        stage('Backend Reports') {
           agent { label 'jenkins-slave-dotnet' }
           steps {
             script {
-              checkout([  
+              checkout([
                 $class: 'GitSCM',
                 branches: [[name: "*/${SOURCE_REPO_BRANCH}"]],
                 doGenerateSubmoduleConfigurations: false,
@@ -203,4 +233,18 @@ pipeline {
       }
     }
   }
+  post {
+    success {
+      script {
+        if (new Boolean(env.SKIP_BUILD) == false) {
+          notify.success('Sheriff Scheduling', RELEASE_VERSION, DESTINATION.toUpperCase(), env.ROCKET_DEPLOY_WEBHOOK)
+        }
+      }
+    }
+    failure {
+      script {
+        notify.failure('Sheriff Scheduling', RELEASE_VERSION, DESTINATION.toUpperCase(), env.ROCKET_DEPLOY_WEBHOOK)
+      }
+    }
+  } // post-stages
 }
