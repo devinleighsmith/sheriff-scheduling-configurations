@@ -445,7 +445,7 @@
       "description": "The exposed hostname that will route to the service, e.g., myappname.pathfinder.gov.bc.ca, if left blank a value will be defaulted.",
       "displayName": "Application Hostname",
       "name": "APPLICATION_DOMAIN",
-      "value": "sheriff-scheduling-dev.pathfinder.gov.bc.ca"
+      "value": "sheriff-scheduling-dev.pathfinder.bcgov"
     },
     {
       "name": "SITEMINDER_WHITE_LIST",
@@ -492,7 +492,7 @@
       "displayName": "Resources CPU Limit",
       "description": "The resources CPU limit (in cores) for this build.",
       "required": true,
-      "value": "250m"
+      "value": "500m"
     },
     {
       "name": "MEMORY_REQUEST",
@@ -506,7 +506,7 @@
       "displayName": "Resources Memory Limit",
       "description": "The resources Memory limit (in Mi, Gi, etc) for this build.",
       "required": true,
-      "value": "256Mi"
+      "value": "512Mi"
     }
   ]
 }
