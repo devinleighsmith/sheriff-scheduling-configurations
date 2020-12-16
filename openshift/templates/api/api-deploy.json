@@ -33,7 +33,8 @@
         "email-service-client-secret": "${EMAIL_SERVICE_CLIENT_SECRET}",
         "sender-email": "${SENDER_EMAIL}",
         "sender-name": "${SENDER_NAME}",
-        "request-access-email": "${REQUEST_ACCESS_EMAIL}"
+        "request-access-email": "${REQUEST_ACCESS_EMAIL}",
+        "siteminder-logout-url": "${SITEMINDER_LOGOUT_URL}"
       },
       "type": "Opaque"
     },
@@ -309,6 +310,15 @@
                   {
                     "name": "WebBaseHref",
                     "value": "${WEB_BASE_HREF}"
+                  },
+                  {
+                    "name": "SiteMinderLogoutUrl",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "${NAME}${SUFFIX}",
+                        "key": "siteminder-logout-url"
+                      }
+                    }
                   }
                 ],
                 "resources": {
@@ -538,6 +548,13 @@
       "displayName": "Web Base Href",
       "description": "The application host path (Web Base Href).",
       "value": "/sheriff-scheduling/"
+    },
+    {
+      "name": "SITEMINDER_LOGOUT_URL",
+      "displayName": "SiteMinder Logout URL",
+      "description": "SiteMinder Logout URL",
+      "required": false,
+      "value": ""
     },
     {
       "name": "MIN_REPLICAS",

@@ -24,6 +24,7 @@ if createOperation; then
   # Get KeyCloak settings
   readParameter "KEYCLOAK_AUTHORITY - Please provide the endpoint (URL) for the OIDC relaying party." KEYCLOAK_AUTHORITY "" "false" 
   readParameter "KEYCLOAK_SECRET - Please provide the API secret toi use with the OIDC relaying party." KEYCLOAK_SECRET "" "false" 
+  readParameter "SITEMINDER_LOGOUT_URL - Please provide the SiteMinder Logout URL." SITEMINDER_LOGOUT_URL "" "false" 
 
   # Get the email settings
   readParameter "EMAIL_SERVICE_URL - Please provide the url for the CHES email api.  The default is a blank string." EMAIL_SERVICE_URL "" "false"  
@@ -37,13 +38,14 @@ else
   printStatusMsg "Update operation detected ...\nSkipping the generation of keys ...\n"
   writeParameter "DATA_PROTECTION_ENCRYPTION_KEY" "generation_skipped" "false"
 
-  printStatusMsg "Update operation detected ...\nSkipping the prompts for LOCATION_SERVICES_CLIENT_URL, LOCATION_SERVICES_CLIENT_USERNAME, LOCATION_SERVICES_CLIENT_PASSWORD, KEYCLOAK_AUTHORITY, KEYCLOAK_SECRET, EMAIL_SERVICE_URL, EMAIL_SERVICE_AUTH_URL, EMAIL_SERVICE_CLIENT_ID, EMAIL_SERVICE_CLIENT_SECRET, SENDER_EMAIL, SENDER_NAME, and REQUEST_ACCESS_EMAIL ...\n"
+  printStatusMsg "Update operation detected ...\nSkipping the prompts for LOCATION_SERVICES_CLIENT_URL, LOCATION_SERVICES_CLIENT_USERNAME, LOCATION_SERVICES_CLIENT_PASSWORD, KEYCLOAK_AUTHORITY, KEYCLOAK_SECRET, SITEMINDER_LOGOUT_URL, EMAIL_SERVICE_URL, EMAIL_SERVICE_AUTH_URL, EMAIL_SERVICE_CLIENT_ID, EMAIL_SERVICE_CLIENT_SECRET, SENDER_EMAIL, SENDER_NAME, and REQUEST_ACCESS_EMAIL ...\n"
   writeParameter "LOCATION_SERVICES_CLIENT_URL" "prompt_skipped" "false"
   writeParameter "LOCATION_SERVICES_CLIENT_USERNAME" "prompt_skipped" "false"
   writeParameter "LOCATION_SERVICES_CLIENT_PASSWORD" "prompt_skipped" "false"
   
   writeParameter "KEYCLOAK_AUTHORITY" "prompt_skipped" "false"
   writeParameter "KEYCLOAK_SECRET" "prompt_skipped" "false"
+  writeParameter "SITEMINDER_LOGOUT_URL" "prompt_skipped" "false"
 
   writeParameter "EMAIL_SERVICE_URL" "prompt_skipped" "false"
   writeParameter "EMAIL_SERVICE_AUTH_URL" "prompt_skipped" "false"
