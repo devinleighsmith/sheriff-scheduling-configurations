@@ -319,6 +319,18 @@
                         "key": "siteminder-logout-url"
                       }
                     }
+                  },
+                  {
+                    "name": "Logging__LogLevel__Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker",
+                    "value": "${CONTROLLER_LOGGING_LEVEL}"
+                  },
+                  {
+                    "name": "Logging__LogLevel__SS.Api.infrastructure.middleware.ErrorHandlingMiddleware",
+                    "value": "${MIDDLEWARE_LOGGING_LEVEL}"
+                  },
+                  {
+                    "name": "Logging__LogLevel__Microsoft.EntityFrameworkCore.Database.Command",
+                    "value": "${DATABASE_LOGGING_LEVEL}"
                   }
                 ],
                 "resources": {
@@ -555,6 +567,27 @@
       "description": "SiteMinder Logout URL",
       "required": false,
       "value": ""
+    },
+    {
+      "name": "CONTROLLER_LOGGING_LEVEL",
+      "displayName": "Controller Loggin Level",
+      "description": "Controller Loggin Level",
+      "required": true,
+      "value": "Warning"
+    },
+    {
+      "name": "MIDDLEWARE_LOGGING_LEVEL",
+      "displayName": "Middleware Loggin Level",
+      "description": "Middleware Loggin Level",
+      "required": true,
+      "value": "Warning"
+    },
+    {
+      "name": "DATABASE_LOGGING_LEVEL",
+      "displayName": "Database Loggin Level",
+      "description": "Database Loggin Level",
+      "required": true,
+      "value": "Warning"
     },
     {
       "name": "MIN_REPLICAS",
