@@ -618,7 +618,7 @@
       "displayName": "Resources CPU Request",
       "description": "The resources CPU request (in cores) for this build.",
       "required": true,
-      "value": "10m"
+      "value": "100m"
     },
     {
       "name": "CPU_LIMIT",
