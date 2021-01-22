@@ -147,6 +147,16 @@
                   "periodSeconds": 10,
                   "successThreshold": 1,
                   "failureThreshold": 3
+                },
+                "lifecycle": {
+                  "preStop": {
+                    "exec": {
+                      "command": [
+                        "/bin/sleep",
+                        "20"
+                      ]
+                    }
+                  }
                 }
               }
             ],
