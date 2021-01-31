@@ -25,11 +25,10 @@ For all params see the list in the `../jenkins-node-generic-template.yaml` or ru
 
 ## Jenkins
 
-Add a new Kubernetes Container template called `jenkins-node-npm` (if you've build and pushed the container image locally) and specify this as the node when running builds. If you're using the template attached; the `role: jenkins-node` is attached and Jenkins should automatically discover the node for you. Further instructions can be found [here](https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins.html#using-the-jenkins-kubernetes-plug-in).
+If you followed the directions above and used the `../jenkins-node-generic-template.yaml` template to publish the resources, a configmap containing a Kubernetes Container template will be registered for you and it should be automatically detected by Jenkins based on the `role:` label so all you have to do is reference the node by it's label in either a `node` or `agent` section within your pipeline.
 
-Add this new Kubernetes Container template and specify this as the node when running builds.
+Otherwise you may need to follow some manual steps in Jenkins:
 
-```
-npm install
-npm run build
-```
+Add a new Kubernetes Container template called `jenkins-node-npm` and specify this as the node when running builds.
+
+Further instructions can be found [here](https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins.html#using-the-jenkins-kubernetes-plug-in).
