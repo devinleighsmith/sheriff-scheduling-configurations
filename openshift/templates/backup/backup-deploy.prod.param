@@ -13,8 +13,8 @@
 # IMAGE_NAMESPACE=01a527-tools
 TAG_NAME=prod
 # DB_SERVICE_NAME=db
-# POSTGRESQL_USER_KEY_NAME=database-user
-# POSTGRESQL_PASSWORD_KEY_NAME=database-password
+# DB_USER_KEY_NAME=database-user
+# DB_PASSWORD_KEY_NAME=database-password
 # BACKUP_STRATEGY=rolling
 # WEBHOOK_URL=
 # WEBHOOK_URL_HOST=
