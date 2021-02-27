@@ -1,12 +1,13 @@
 #=========================================================
 # OpenShift template parameters for:
 # Component: .
-# Template File: ../openshift/templates/api/api-deploy.json
+# Template File: ../openshift/templates/api/api-deploy.yaml
 #=========================================================
-# NAME=ss-api
+# NAME=api
 # SUFFIX=
 # APP_NAME=Sheriff-Scheduling
 # APP_GROUP=ss
+# NAMESPACE_NAME=01a527
 # ROLE=api
 # IMAGE_NAMESPACE=01a527-tools
 TAG_NAME=prod
@@ -17,10 +18,22 @@ TAG_NAME=prod
 # LOCATION_SERVICES_CLIENT_USERNAME=
 # LOCATION_SERVICES_CLIENT_PASSWORD=
 # LOCATION_SERVICES_CLIENT_URL=
+# LOCATION_SERVICES_CLIENT_HOST=
 # KEYCLOAK_CLIENT=ss-api
 # KEYCLOAK_AUDIENCE=ss-api
 # KEYCLOAK_AUTHORITY=
+# OIDC_RP_HOST=
 # KEYCLOAK_SECRET=
+# DATA_PROTECTION_ENCRYPTION_KEY=
+# EMAIL_SERVICE_URL=
+# EMAIL_SERVICE_HOST=
+# EMAIL_SERVICE_AUTH_URL=
+# EMAIL_SERVICE_AUTH_HOST=
+# EMAIL_SERVICE_CLIENT_ID=
+# EMAIL_SERVICE_CLIENT_SECRET=
+# SENDER_EMAIL=
+# SENDER_NAME=
+# REQUEST_ACCESS_EMAIL=
 # WEB_BASE_HREF=/sheriff-scheduling/
 # SITEMINDER_LOGOUT_URL=
 CONTROLLER_LOGGING_LEVEL=Warning

@@ -1,7 +1,7 @@
 #=========================================================
 # OpenShift template parameters for:
 # Component: .
-# Template File: ../openshift/templates/db/postgresql-build.json
+# Template File: ../openshift/templates/db/postgresql-build.yaml
 #=========================================================
 NAME=postgresql
 APP_NAME=Sheriff-Scheduling

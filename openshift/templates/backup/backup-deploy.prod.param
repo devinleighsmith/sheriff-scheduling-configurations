@@ -7,6 +7,8 @@
 # SUFFIX=
 # APP_NAME=Backup
 # APP_GROUP=sheriff-scheduling
+# ROLE=backup
+# NAMESPACE_NAME=01a527
 # SOURCE_IMAGE_NAME=backup
 # IMAGE_NAMESPACE=01a527-tools
 TAG_NAME=prod
@@ -17,6 +19,7 @@ TAG_NAME=prod
 # WEBHOOK_URL=
 ENVIRONMENT_FRIENDLY_NAME=Sheriff Scheduling (prod)
 ENVIRONMENT_NAME=jag-shuber-prod
+# ENVIRONMENT_NAME=01a527-prod
 # BACKUP_DIR=/backups/
 # DAILY_BACKUPS=
 # WEEKLY_BACKUPS=
