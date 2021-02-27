@@ -1,7 +1,7 @@
 #=========================================================
 # OpenShift template parameters for:
 # Component: .
-# Template File: ../openshift/templates/web/web-artifacts-build.json
+# Template File: ../openshift/templates/web/web-artifacts-build.yaml
 #=========================================================
 NAME=web-artifacts
 SUFFIX=

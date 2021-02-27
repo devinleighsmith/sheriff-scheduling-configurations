@@ -1,14 +1,12 @@
 #=========================================================
 # OpenShift template parameters for:
 # Component: .
-# Template File: ../openshift/templates/web/web-build.json
+# Template File: ../openshift/templates/web/web-build.yaml
 #=========================================================
 NAME=web
 SUFFIX=
 APP_NAME=Sheriff-Scheduling
 APP_GROUP=app-image
-NAMESPACE_NAME=01a527
-ENV_NAME=tools
 SOURCE_IMAGE_NAMESPACE=01a527-tools
 SOURCE_IMAGE_NAME=web-artifacts
 SOURCE_IMAGE_TAG=latest
