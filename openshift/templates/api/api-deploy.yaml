@@ -292,7 +292,7 @@ parameters:
     displayName: Name
     description: The name assigned to all of the OpenShift resources associated to the server instance.
     required: true
-    value: ss-api
+    value: api
   - name: SUFFIX
     displayName: Suffix
     description: A name suffix used for all objects

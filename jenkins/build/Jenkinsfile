@@ -107,7 +107,7 @@ pipeline {
           steps {
             script {
               sh """
-                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build ss-api -apply
+                OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api -apply
               """
             }
           }
@@ -124,7 +124,7 @@ pipeline {
       }
       steps {
         script {
-          def img_backend = 'ss-api'
+          def img_backend = 'api'
           def img_frontend = 'web'
 
           // tag release version (if provided)
@@ -136,7 +136,7 @@ pipeline {
             RELEASE_VERSION = 'latest'
           }
 
-          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy ss-api ${OC_JOB_NAME} -apply"
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${OC_JOB_NAME} -apply"
           sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy web ${OC_JOB_NAME} -apply"
         }
       }

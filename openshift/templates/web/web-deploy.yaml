@@ -257,7 +257,7 @@ parameters:
     displayName: API Service Name
     name: API_SERVICE_NAME
     required: false
-    value: ss-api
+    value: api
   - description: The root path for the API.  Used in conjunction with API_SERVICE_NAME.
     displayName: API Path
     name: API_PATH
