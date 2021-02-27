@@ -53,21 +53,6 @@ objects:
         limits:
           cpu: ${CPU_LIMIT}
           memory: ${MEMORY_LIMIT}
-  - kind: NetworkSecurityPolicy
-    apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
-    metadata:
-      name: pods-to-external-network
-      labels:
-        name: pods-to-external-network
-        env: ${ENV_NAME}
-    spec:
-      description: |
-        Allow the builds to access the internet.
-        This only needs to be specified once per environment.
-      source:
-        - - $namespace=${NAMESPACE_NAME}-${ENV_NAME}
-      destination:
-        - - ext:network=any
 parameters:
   - name: NAME
     displayName: Name
@@ -89,16 +74,6 @@ parameters:
     description: The name assigned to all of the deployments in this project.
     required: true
     value: app-image
-  - name: NAMESPACE_NAME
-    displayName: Namespace Name
-    description: The base namespace name for the project.
-    required: true
-    value: jag-shuber
-  - name: ENV_NAME
-    displayName: Environment Name
-    description: Environment name.  For the build environment this will typically be 'tools'
-    required: true
-    value: tools
   - name: SOURCE_IMAGE_NAMESPACE
     displayName: Source Image Namespace
     description: The namespace containing the source image.
