@@ -7,7 +7,7 @@
 # APP_NAME=Sheriff-Scheduling
 # ROLE=db
 # APP_GROUP=ss
-# IMAGE_NAMESPACE=jag-shuber-tools
+# IMAGE_NAMESPACE=01a527-tools
 # SOURCE_IMAGE_NAME=postgresql
 TAG_NAME=test
 # PERSISTENT_VOLUME_SIZE=15Gi

@@ -10,7 +10,7 @@ pipeline {
     CI = 'true'
 
     // The name of the project namespace(s).
-    NAME_SPACE = 'jag-shuber'
+    NAME_SPACE = '01a527'
 
     // This should match your monorepo folder structure
     API_DIRECTORY = 'api'

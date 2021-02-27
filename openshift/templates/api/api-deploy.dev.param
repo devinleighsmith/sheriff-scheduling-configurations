@@ -8,7 +8,7 @@
 # APP_NAME=Sheriff-Scheduling
 # APP_GROUP=ss
 # ROLE=api
-# IMAGE_NAMESPACE=jag-shuber-tools
+# IMAGE_NAMESPACE=01a527-tools
 TAG_NAME=dev
 # DB_NAME=postgresql
 # ASPNETCORE_ENVIRONMENT=Production

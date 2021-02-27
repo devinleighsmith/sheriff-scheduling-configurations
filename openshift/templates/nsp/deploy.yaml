@@ -24,7 +24,7 @@ parameters:
   - name: NAMESPACE_NAME
     displayName: The target namespace for the resources.
     required: true
-    value: jag-shuber
+    value: 01a527
   - name: TAG_NAME
     displayName: Environment Name
     description: Environment name.  For the build environment this will typically be 'tools'

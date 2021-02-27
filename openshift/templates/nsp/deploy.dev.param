@@ -3,5 +3,5 @@
 # Component: .
 # Template File: ../openshift/templates/nsp/deploy.yaml
 #=========================================================
-# NAMESPACE_NAME=jag-shuber
+# NAMESPACE_NAME=01a527
 TAG_NAME=dev

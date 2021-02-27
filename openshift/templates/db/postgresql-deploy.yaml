@@ -226,7 +226,7 @@ parameters:
     value: 15Gi
   - name: PERSISTENT_VOLUME_CLASS
     displayName: Persistent Volume Class name
-    description: The class of the volume; gluster-file, gluster-block, gluster-file-db.
+    description: The class of the volume; netapp-file-standard, netapp-file-extended, netapp-block-standard, or netapp-block-extended.
     required: false
     value: netapp-file-standard
   - name: POSTGRESQL_DATABASE_NAME

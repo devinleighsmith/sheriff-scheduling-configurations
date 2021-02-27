@@ -30,7 +30,7 @@ export PATH="$PATH:/root/.dotnet/tools"
 TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-ss-api-${TARGET}}
 SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-Sheriff Scheduling api}
-SONAR_URL=${SONAR_URL:-https://sonarqube-jag-shuber-tools.pathfinder.gov.bc.ca}
+SONAR_URL=${SONAR_URL:-https://sonarqube-01a527-tools.pathfinder.gov.bc.ca}
 
 
 BACKEND_DIR="${BACKEND_DIR:-${WORKSPACE}/${SOURCE_DIRECTORY}/api}"

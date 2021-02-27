@@ -59,10 +59,10 @@ parameters:
     displayName: Jenkins Agent image name
     required: true
   - name: NAMESPACE
-    description: Target namespace reference (i.e. 'jag-shuber-tools')
+    description: Target namespace reference (i.e. '01a527-tools')
     displayName: Namespace
     required: true
-    value: jag-shuber-tools
+    value: 01a527-tools
   - name: CPU_REQUEST
     description: Minimal CPU needed to run
     displayName: CPU Request

@@ -232,7 +232,7 @@ parameters:
     displayName: Namespace Name
     description: The base namespace name for the project.
     required: true
-    value: jag-shuber
+    value: 01a527
   - name: ROLE
     displayName: Role
     description: The role of this service within the application - used for Network Policies
@@ -242,7 +242,7 @@ parameters:
     displayName: Image Namespace
     name: IMAGE_NAMESPACE
     required: true
-    value: jag-shuber-tools
+    value: 01a527-tools
   - description: OpenShift cluster private IP range in CIDR notation, used by Nginx ngx_http_realip_module.
     displayName: OpenShift Cluster IP Range
     name: REAL_IP_FROM

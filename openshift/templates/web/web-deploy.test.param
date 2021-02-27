@@ -7,9 +7,9 @@
 # SUFFIX=
 # APP_NAME=Sheriff-Scheduling
 # APP_GROUP=ss
-# NAMESPACE_NAME=jag-shuber
+# NAMESPACE_NAME=01a527
 # ROLE=web
-# IMAGE_NAMESPACE=jag-shuber-tools
+# IMAGE_NAMESPACE=01a527-tools
 # REAL_IP_FROM=172.51.0.0/16
 # API_URL=
 # API_SERVICE_NAME=ss-api
