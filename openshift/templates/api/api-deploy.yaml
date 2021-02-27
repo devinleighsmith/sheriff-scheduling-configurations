@@ -18,6 +18,9 @@ objects:
         Define the network parameters for accessing remote resources.
       entries:
         - ${OIDC_RP_HOST}
+        - ${LOCATION_SERVICES_CLIENT_HOST}
+        - ${EMAIL_SERVICE_HOST}
+        - ${EMAIL_SERVICE_AUTH_HOST}
       servicePorts:
         - tcp/443
 
@@ -58,6 +61,7 @@ objects:
       location-services-client-username: ${LOCATION_SERVICES_CLIENT_USERNAME}
       location-services-client-password: ${LOCATION_SERVICES_CLIENT_PASSWORD}
       location-services-client-url: ${LOCATION_SERVICES_CLIENT_URL}
+      location-services-client-host: ${LOCATION_SERVICES_CLIENT_HOST}
       keycloak-client: ${KEYCLOAK_CLIENT}
       keycloak-authority: ${KEYCLOAK_AUTHORITY}
       oidc-rp-host: ${OIDC_RP_HOST}
@@ -65,7 +69,9 @@ objects:
       keycloak-audience: ${KEYCLOAK_AUDIENCE}
       data-protection-encryption-key: ${DATA_PROTECTION_ENCRYPTION_KEY}
       email-service-url: ${EMAIL_SERVICE_URL}
+      email-service-host: ${EMAIL_SERVICE_HOST}
       email-service-auth-url: ${EMAIL_SERVICE_AUTH_URL}
+      email-service-auth-host: ${EMAIL_SERVICE_AUTH_HOST}
       email-service-client-id: ${EMAIL_SERVICE_CLIENT_ID}
       email-service-client-secret: ${EMAIL_SERVICE_CLIENT_SECRET}
       sender-email: ${SENDER_EMAIL}
@@ -132,7 +138,7 @@ objects:
         spec:
           containers:
             - name: ${NAME}${SUFFIX}
-              image: ' '
+              image: " "
               ports:
                 - containerPort: 8080
                   protocol: TCP
@@ -302,6 +308,11 @@ parameters:
     description: The name assigned to all of the deployments in this project.
     required: true
     value: ss
+  - name: NAMESPACE_NAME
+    displayName: Namespace Name
+    description: The base namespace name for the project.
+    required: true
+    value: 01a527
   - name: ROLE
     displayName: Role
     description: The role of this service within the application - used for Network Policies
@@ -352,6 +363,11 @@ parameters:
     description: Location services API base URL.
     required: false
     value: ""
+  - name: LOCATION_SERVICES_CLIENT_HOST
+    displayName: Location Services Client Host
+    description: Location services Client Host.
+    required: false
+    value: ""
   - name: KEYCLOAK_CLIENT
     displayName: KeyCloak Client
     description: KeyCloak Client
@@ -371,7 +387,7 @@ parameters:
     displayName: OIDC RP Hostname
     description: OIDC RP Hostname.  The api-deploy.overrides.sh will parse this from the supplied KEYCLOAK_AUTHORITY, and fetch it from a secret for updates.
     required: false
-    value:    
+    value:
   - name: KEYCLOAK_SECRET
     displayName: KeyCloak Secret
     description: KeyCloak API Secret
@@ -387,9 +403,19 @@ parameters:
     description: Email Service API URL
     required: false
     value: ""
+  - name: EMAIL_SERVICE_HOST
+    displayName: Email Service API Host
+    description: Email Service API Host
+    required: false
+    value: ""
   - name: EMAIL_SERVICE_AUTH_URL
     displayName: Email Service Auth URL
     description: Email Service Auth URL
+    required: false
+    value: ""
+  - name: EMAIL_SERVICE_AUTH_HOST
+    displayName: Email Service Auth HOST
+    description: Email Service Auth HOST
     required: false
     value: ""
   - name: EMAIL_SERVICE_CLIENT_ID
