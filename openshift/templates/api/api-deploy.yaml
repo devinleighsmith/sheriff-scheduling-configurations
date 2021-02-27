@@ -3,6 +3,47 @@ apiVersion: v1
 metadata:
   name: ${NAME}${SUFFIX}-deployment-template
 objects:
+  - kind: ExternalNetwork
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${NAME}
+      network: ${NAME}
+      labels:
+        name: ${NAME}
+        network: ${NAME}
+        app: ${APP_NAME}
+        env: ${TAG_NAME}
+    spec:
+      description: |
+        Define the network parameters for accessing remote resources.
+      entries:
+        - ${OIDC_RP_HOST}
+      servicePorts:
+        - tcp/443
+
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${NAME}
+      labels:
+        name: ${NAME}
+        app: ${APP_NAME}
+        env: ${TAG_NAME}
+    spec:
+      description: |
+        Allow the application's API to talk to either the database or pdf microservice, plus a defined set of external resources.
+      source:
+        - - role=${ROLE}
+          - app=${APP_NAME}
+          - env=${TAG_NAME}
+          - $namespace=${NAMESPACE_NAME}-${TAG_NAME}
+      destination:
+        - - role=db
+          - app=${APP_NAME}
+          - env=${TAG_NAME}
+          - $namespace=${NAMESPACE_NAME}-${TAG_NAME}
+        - - ext:name=${NAME}
+
   - kind: Secret
     apiVersion: v1
     metadata:
@@ -19,6 +60,7 @@ objects:
       location-services-client-url: ${LOCATION_SERVICES_CLIENT_URL}
       keycloak-client: ${KEYCLOAK_CLIENT}
       keycloak-authority: ${KEYCLOAK_AUTHORITY}
+      oidc-rp-host: ${OIDC_RP_HOST}
       keycloak-secret: ${KEYCLOAK_SECRET}
       keycloak-audience: ${KEYCLOAK_AUDIENCE}
       data-protection-encryption-key: ${DATA_PROTECTION_ENCRYPTION_KEY}
@@ -325,6 +367,11 @@ parameters:
     description: The URL to the KeyCloak authorization endpoint.
     required: false
     value: ""
+  - name: OIDC_RP_HOST
+    displayName: OIDC RP Hostname
+    description: OIDC RP Hostname.  The api-deploy.overrides.sh will parse this from the supplied KEYCLOAK_AUTHORITY, and fetch it from a secret for updates.
+    required: false
+    value:    
   - name: KEYCLOAK_SECRET
     displayName: KeyCloak Secret
     description: KeyCloak API Secret

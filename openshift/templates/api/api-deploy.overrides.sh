@@ -1,5 +1,8 @@
 _includeFile=$(type -p overrides.inc)
+# Import ocFunctions.inc for getSecret
+_ocFunctions=$(type -p ocFunctions.inc)
 if [ ! -z ${_includeFile} ]; then
+  . ${_ocFunctions}
   . ${_includeFile}
 else
   _red='\033[0;31m'; _yellow='\033[1;33m'; _nc='\033[0m'; echo -e \\n"${_red}overrides.inc could not be found on the path.${_nc}\n${_yellow}Please ensure the openshift-developer-tools are installed on and registered on your path.${_nc}\n${_yellow}https://github.com/BCDevOps/openshift-developer-tools${_nc}"; exit 1;
@@ -23,6 +26,7 @@ if createOperation; then
 
   # Get KeyCloak settings
   readParameter "KEYCLOAK_AUTHORITY - Please provide the endpoint (URL) for the OIDC relaying party." KEYCLOAK_AUTHORITY "" "false" 
+  parseHostnameParameter "KEYCLOAK_AUTHORITY" "OIDC_RP_HOST"
   readParameter "KEYCLOAK_SECRET - Please provide the API secret toi use with the OIDC relaying party." KEYCLOAK_SECRET "" "false" 
   readParameter "SITEMINDER_LOGOUT_URL - Please provide the SiteMinder Logout URL." SITEMINDER_LOGOUT_URL "" "false" 
 
@@ -54,6 +58,10 @@ else
   writeParameter "SENDER_EMAIL" "prompt_skipped" "false"
   writeParameter "SENDER_NAME" "prompt_skipped" "false"
   writeParameter "REQUEST_ACCESS_EMAIL" "prompt_skipped" "false"
+
+  # Get OIDC_RP_HOST from secret
+  printStatusMsg "Getting OIDC_RP_HOST for the ExternalNetwork definition from secret ...\n"
+  writeParameter "OIDC_RP_HOST" $(getSecret "${NAME}" "oidc-rp-host") "false"
 fi
 
 SPECIALDEPLOYPARMS="--param-file=${_overrideParamFile}"
