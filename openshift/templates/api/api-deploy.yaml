@@ -332,7 +332,7 @@ parameters:
     displayName: Database Name
     description: The name assigned to all of the OpenShift resources associated to the PostgreSQL instance.
     required: true
-    value: postgresql
+    value: db
   - name: ASPNETCORE_ENVIRONMENT
     displayName: ASP .Net Core Environment
     description: ASP .Net Core Environment

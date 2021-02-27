@@ -252,17 +252,17 @@ parameters:
     description: The TAG name for this environment, e.g., dev, test, prod
     required: true
     value: dev
-  - name: POSTGRESQL_SERVICE_NAME
+  - name: DB_SERVICE_NAME
     displayName: Database Service Name
     description: The name associated to the database service.  In particular, this is used to wire up the credentials associated to the database.
     required: true
-    value: postgresql
-  - name: POSTGRESQL_USER_KEY_NAME
+    value: db
+  - name: DB_USER_KEY_NAME
     displayName: Database User Key Name
     description: The datbase user key name stoed in database deployment resources specified by DATABASE_DEPLOYMENT_NAME.
     required: true
     value: database-user
-  - name: POSTGRESQL_PASSWORD_KEY_NAME
+  - name: DB_PASSWORD_KEY_NAME
     displayName: Database Password Key Name
     description: The database password key name stored in database deployment resources specified by DATABASE_DEPLOYMENT_NAME.
     required: true

@@ -11,7 +11,7 @@
 # ROLE=api
 # IMAGE_NAMESPACE=01a527-tools
 TAG_NAME=prod
-# DB_NAME=postgresql
+# DB_NAME=db
 # ASPNETCORE_ENVIRONMENT=Production
 # ASPNETCORE_URLS=http://+:8080
 # CORS_DOMAIN=http://localhost:8080
