@@ -20,7 +20,7 @@
 # NGINX_CONF_TEMPLATE_FILE_NAME=nginx.conf.template
 # NGINX_CONF_TEMPLATE_CONFIG_MAP_NAME=nginx-conf-template
 # NGINX_CONF_TEMPLATE_MOUNT_PATH=/tmp/
-APPLICATION_DOMAIN=sheriff-scheduling-dev.pathfinder.bcgov
+APPLICATION_DOMAIN=sheriff-scheduling-dev.silver.devops.bcgov
 # SITEMINDER_WHITE_LIST=
 # ROUTE_TIMEOUT=60s
 TAG_NAME=dev

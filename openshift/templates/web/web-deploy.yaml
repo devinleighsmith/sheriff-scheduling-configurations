@@ -289,10 +289,10 @@ parameters:
     description: The path to use to mount the config file.
     required: true
     value: /tmp/
-  - description: The exposed hostname that will route to the service, e.g., myappname.pathfinder.gov.bc.ca, if left blank a value will be defaulted.
+  - description: The exposed hostname that will route to the service, e.g., myappname.apps.silver.devops.gov.bc.ca, if left blank a value will be defaulted.
     displayName: Application Hostname
     name: APPLICATION_DOMAIN
-    value: sheriff-scheduling-dev.pathfinder.bcgov
+    value: sheriff-scheduling-dev.silver.devops.bcgov
   - name: SITEMINDER_WHITE_LIST
     displayName: SiteMinder Whitelist
     description: The whitelist containing all of the trusted siteminder IPs.

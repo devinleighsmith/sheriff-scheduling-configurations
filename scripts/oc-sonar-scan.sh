@@ -28,7 +28,7 @@ source "$(dirname ${0})/common.sh"
 TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-web-${TARGET}}
 SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-Sheriff Scheduling Web [${TARGET}]}
-SONAR_URL=${SONAR_URL:-https://sonarqube-01a527-tools.pathfinder.gov.bc.ca}
+SONAR_URL=${SONAR_URL:-https://sonarqube-01a527-tools.apps.silver.devops.gov.bc.ca}
 ZAP_REPORT=${ZAP_REPORT:-}
 
 FRONTEND_DIR="${FRONTEND_DIR:-${WORKSPACE}/${SOURCE_DIRECTORY}/web}"

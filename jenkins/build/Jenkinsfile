@@ -21,7 +21,7 @@ pipeline {
     SONARQUBE_URL_INT = 'http://sonarqube:9000'
 
     // The URI to the application being deployed.
-    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://sheriff-scheduling-dev.pathfinder.gov.bc.ca/}"', returnStdout: true).trim()
+    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://sheriff-scheduling-dev.apps.silver.devops.gov.bc.ca/}"', returnStdout: true).trim()
     OC_JOB_NAME = sh(script: 'echo "${OC_JOB_NAME:-dev}"', returnStdout: true).trim()
     ENABLE_VERSION_PROMPT = sh(script: 'echo "${ENABLE_VERSION_PROMPT:-false}"', returnStdout: true).trim()
     SOURCE_REPO = sh(script: 'echo "${SOURCE_REPO:-https://github.com/bcgov/sheriff-scheduling.git}"', returnStdout: true).trim()
