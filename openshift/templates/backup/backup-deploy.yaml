@@ -173,13 +173,13 @@ objects:
                 - name: POSTGRESQL_USER
                   valueFrom:
                     secretKeyRef:
-                      name: ${POSTGRESQL_SERVICE_NAME}${SUFFIX}
-                      key: ${POSTGRESQL_USER_KEY_NAME}
+                      name: ${DB_SERVICE_NAME}${SUFFIX}
+                      key: ${DB_USER_KEY_NAME}
                 - name: POSTGRESQL_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${POSTGRESQL_SERVICE_NAME}${SUFFIX}
-                      key: ${POSTGRESQL_PASSWORD_KEY_NAME}
+                      name: ${DB_SERVICE_NAME}${SUFFIX}
+                      key: ${DB_PASSWORD_KEY_NAME}
                 - name: WEBHOOK_URL
                   valueFrom:
                     secretKeyRef:
