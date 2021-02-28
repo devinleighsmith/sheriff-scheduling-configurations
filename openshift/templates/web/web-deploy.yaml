@@ -6,8 +6,31 @@ metadata:
     tags: nginx
   name: ${NAME}
 objects:
-  - apiVersion: v1
-    kind: DeploymentConfig
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: custom-${NAME}${SUFFIX}-policy
+      labels:
+        name: custom-${NAME}${SUFFIX}-policy
+        app: ${APP_NAME}${SUFFIX}
+        app-group: ${APP_GROUP}
+        role: ${ROLE}
+        env: ${TAG_NAME}
+    spec:
+      description: Allow the web application to talk to the api.
+      source:
+        - - role=${ROLE}
+          - app=${APP_NAME}${SUFFIX}
+          - env=${TAG_NAME}
+          - $namespace=${NAMESPACE_NAME}-${TAG_NAME}
+      destination:
+        - - role=api
+          - app=${APP_NAME}${SUFFIX}
+          - env=${TAG_NAME}
+          - $namespace=${NAMESPACE_NAME}-${TAG_NAME}
+
+  - kind: DeploymentConfig
+    apiVersion: v1
     metadata:
       creationTimestamp: null
       labels:
@@ -123,8 +146,9 @@ objects:
               kind: ImageStreamTag
               namespace: ${IMAGE_NAMESPACE}
               name: ${NAME}:${TAG_NAME}
-  - apiVersion: v1
-    kind: Service
+
+  - kind: Service
+    apiVersion: v1
     metadata:
       creationTimestamp: null
       labels:
@@ -145,8 +169,9 @@ objects:
         deploymentconfig: ${NAME}${SUFFIX}
       sessionAffinity: None
       type: ClusterIP
-  - apiVersion: v1
-    kind: Route
+
+  - kind: Route
+    apiVersion: v1
     metadata:
       name: ${NAME}${SUFFIX}
       labels:
@@ -157,7 +182,7 @@ objects:
         env: ${TAG_NAME}
       annotations:
         haproxy.router.openshift.io/timeout: ${ROUTE_TIMEOUT}
-        haproxy.router.openshift.io/ip_whitelist: ${SITEMINDER_WHITE_LIST}
+        haproxy.router.openshift.io/ip_whitelist: ${ALLOW_LIST}
     spec:
       host: ${APPLICATION_DOMAIN}
       port:
@@ -169,6 +194,7 @@ objects:
         kind: Service
         name: ${NAME}${SUFFIX}
         weight: 100
+
   - kind: HorizontalPodAutoscaler
     apiVersion: autoscaling/v1
     metadata:
@@ -185,28 +211,21 @@ objects:
         name: ${NAME}${SUFFIX}
       minReplicas: ${{MIN_REPLICAS}}
       maxReplicas: ${{MAX_REPLICAS}}
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
+
+  - kind: Secret
+    apiVersion: v1
     metadata:
-      name: custom-${NAME}${SUFFIX}-policy
+      name: ${NAME}${SUFFIX}
       labels:
-        name: custom-${NAME}${SUFFIX}-policy
+        name: ${NAME}${SUFFIX}
         app: ${APP_NAME}${SUFFIX}
         app-group: ${APP_GROUP}
         role: ${ROLE}
         env: ${TAG_NAME}
-    spec:
-      description: Allow the web application to talk to the api.
-      source:
-        - - role=${ROLE}
-          - app=${APP_NAME}${SUFFIX}
-          - env=${TAG_NAME}
-          - $namespace=${NAMESPACE_NAME}-${TAG_NAME}
-      destination:
-        - - role=api
-          - app=${APP_NAME}${SUFFIX}
-          - env=${TAG_NAME}
-          - $namespace=${NAMESPACE_NAME}-${TAG_NAME}
+    stringData:
+      allow-list: ${ALLOW_LIST}
+    type: Opaque
+
 parameters:
   - description: The name assigned to all of the openshift objects defined in this template. It is also the name of runtime image you want.
     displayName: Name
@@ -293,9 +312,9 @@ parameters:
     displayName: Application Hostname
     name: APPLICATION_DOMAIN
     value: sheriff-scheduling-dev.silver.devops.bcgov
-  - name: SITEMINDER_WHITE_LIST
-    displayName: SiteMinder Whitelist
-    description: The whitelist containing all of the trusted siteminder IPs.
+  - name: ALLOW_LIST
+    displayName: Allow List
+    description: The allow list containing all of the trusted source IPs.
     required: false
   - name: ROUTE_TIMEOUT
     displayName: Route Timeout

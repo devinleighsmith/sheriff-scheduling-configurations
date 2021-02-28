@@ -154,7 +154,7 @@ objects:
       database-password: ${POSTGRESQL_PASSWORD}
       database-user: ${POSTGRESQL_USER}
       database-name: ${POSTGRESQL_DATABASE_NAME}
-      database-connection-string: 'Host=${NAME}${SUFFIX};Port=5432;Database=${POSTGRESQL_DATABASE_NAME};Username=${POSTGRESQL_USER};Password=${POSTGRESQL_PASSWORD};Minimum Pool Size=10;'
+      database-connection-string: 'Host=${NAME};Port=5432;Database=${POSTGRESQL_DATABASE_NAME};Username=${POSTGRESQL_USER};Password=${POSTGRESQL_PASSWORD};Minimum Pool Size=10;'
     type: Opaque
 
   - kind: Service
