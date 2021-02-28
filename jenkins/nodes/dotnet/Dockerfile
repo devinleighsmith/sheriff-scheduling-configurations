@@ -6,6 +6,7 @@ LABEL \
     io.openshift.tags="openshift,jenkins,agent,dotnet,dotnet31"
 
 ARG SONAR_VERSION=4.9.0
+ARG COVERLET_CONSOLE_VERSION=1.7.2
 
 USER 0
 
@@ -13,7 +14,7 @@ USER 0
 RUN source scl_source enable rh-nodejs10 rh-dotnet31 && \
     fix_permissions() { while [[ $# > 0 ]] ; do chgrp -R 0 "$1" && chmod -R g=u "$1"; shift; done } && \
     dotnet tool install --global dotnet-sonarscanner --version ${SONAR_VERSION} && \
-    dotnet tool install --global coverlet.console && \
+    dotnet tool install --global coverlet.console --version ${COVERLET_CONSOLE_VERSION} && \
     fix_permissions "/usr/local/bin" "${HOME}"
 
 ENV PATH=$PATH:$HOME/.dotnet/tools
