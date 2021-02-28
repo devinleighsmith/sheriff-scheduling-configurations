@@ -186,7 +186,7 @@ parameters:
       The name assigned to all of the OpenShift resources associated to the
       PostgreSQL instance.
     required: true
-    value: postgresql
+    value: db
 
   - name: APP_NAME
     displayName: App Name
@@ -213,7 +213,7 @@ parameters:
     displayName: Source Image Name
     description: The name of the image to use for this resource.
     required: true
-    value: postgresql
+    value: db
   - name: TAG_NAME
     displayName: Environment TAG name
     description: The TAG name for this environment, e.g., dev, test, prod
@@ -226,7 +226,7 @@ parameters:
     value: 15Gi
   - name: PERSISTENT_VOLUME_CLASS
     displayName: Persistent Volume Class name
-    description: The class of the volume; gluster-file, gluster-block, gluster-file-db.
+    description: The class of the volume; netapp-file-standard, netapp-file-extended, netapp-block-standard, or netapp-block-extended.
     required: false
     value: netapp-file-standard
   - name: POSTGRESQL_DATABASE_NAME

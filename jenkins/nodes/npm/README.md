@@ -15,7 +15,7 @@ For local running and experimentation run `docker run -i -t jenkins-node-npm /bi
 ## Build in OpenShift
 
 ```bash
-oc process -f ../jenkins-node-generic-template.yaml \
+oc -n 01a527-tools process -f ../jenkins-node-generic-template.yaml \
     -p NAME=jenkins-node-npm \
     -p SOURCE_CONTEXT_DIR=jenkins/nodes/npm \
     | oc apply -f -

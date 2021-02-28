@@ -1,14 +1,14 @@
 #=========================================================
 # OpenShift template parameters for:
 # Component: .
-# Template File: ../openshift/templates/db/postgresql-deploy.yaml
+# Template File: ../openshift/templates/db/db-deploy.yaml
 #=========================================================
-NAME=postgresql
+NAME=db
 APP_NAME=Sheriff-Scheduling
 ROLE=db
 APP_GROUP=ss
-IMAGE_NAMESPACE=jag-shuber-tools
-SOURCE_IMAGE_NAME=postgresql
+IMAGE_NAMESPACE=01a527-tools
+SOURCE_IMAGE_NAME=db
 TAG_NAME=dev
 PERSISTENT_VOLUME_SIZE=15Gi
 PERSISTENT_VOLUME_CLASS=netapp-file-standard

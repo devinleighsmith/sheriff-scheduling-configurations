@@ -15,7 +15,7 @@ For local running and experimentation run `docker run -i -t jenkins-node-dotnet 
 ## Build in OpenShift
 
 ```bash
-oc process -f ../jenkins-node-generic-template.yaml \
+oc -n 01a527-tools process -f ../jenkins-node-generic-template.yaml \
     -p NAME=jenkins-node-dotnet \
     -p BUILDER_IMAGE_NAME=registry.centos.org/dotnet/dotnet-31-centos7:latest \
     -p SOURCE_CONTEXT_DIR=jenkins/nodes/dotnet \
