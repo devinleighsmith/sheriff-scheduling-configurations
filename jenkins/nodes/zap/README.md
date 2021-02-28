@@ -18,7 +18,7 @@ For local running and experimentation run `docker run -i -t jenkins-node-zap /bi
 oc -n 01a527-tools process -f ../jenkins-node-generic-template.yaml \
     -p NAME=jenkins-node-zap \
     -p SOURCE_CONTEXT_DIR=jenkins/nodes/zap \
-    -p BUILDER_IMAGE_NAME=centos:centos7 \
+    -p BUILDER_IMAGE_NAME=docker-remote.artifacts.developer.gov.bc.ca/centos:centos7 \
     | oc create -f -
 ```
 
