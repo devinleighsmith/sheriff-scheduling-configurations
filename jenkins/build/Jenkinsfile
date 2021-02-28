@@ -142,12 +142,12 @@ pipeline {
       }
     }
 
-    // The ZAP scripts are installed on the root of the jenkins-slave-zap image.
+    // The ZAP scripts are installed on the root of the jenkins-node-zap image.
     // When running ZAP from there the reports will be created in /zap/wrk/ by default.
     // ZAP has problems with creating the reports directly in the Jenkins
     // working directory, so they have to be copied over after the fact.
     stage('OWASP Scan') {
-      agent { label 'owasp-zap' }
+      agent { label 'jenkins-node-zap' }
       options {
         timeout(time: 25, unit: 'MINUTES')
       }
@@ -179,7 +179,7 @@ pipeline {
       }
       parallel {
         stage('Web Reports') {
-          agent { label 'jenkins-slave-npm' }
+          agent { label 'jenkins-node-npm' }
           steps {
             script {
               // pull code
@@ -207,7 +207,7 @@ pipeline {
           }
         }
         stage('Backend Reports') {
-          agent { label 'jenkins-slave-dotnet' }
+          agent { label 'jenkins-node-dotnet' }
           steps {
             script {
               checkout([
