@@ -6,7 +6,7 @@
 NAME=backup
 SUFFIX=
 APP_NAME=Backup
-APP_GROUP=sheriff-scheduling
+APP_GROUP=Sheriff-Scheduling
 GIT_REPO_URL=https://github.com/BCDevOps/backup-container.git
 GIT_REF=2.3.2
 SOURCE_CONTEXT_DIR=/docker

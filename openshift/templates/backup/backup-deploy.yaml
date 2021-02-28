@@ -170,12 +170,12 @@ objects:
                   value: ${WEEKLY_BACKUPS}
                 - name: MONTHLY_BACKUPS
                   value: ${MONTHLY_BACKUPS}
-                - name: POSTGRESQL_USER
+                - name: DB_USER
                   valueFrom:
                     secretKeyRef:
                       name: ${DB_SERVICE_NAME}${SUFFIX}
                       key: ${DB_USER_KEY_NAME}
-                - name: POSTGRESQL_PASSWORD
+                - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       name: ${DB_SERVICE_NAME}${SUFFIX}
@@ -226,7 +226,7 @@ parameters:
     displayName: App Group
     description: The name assigned to all of the deployments in this project.
     required: true
-    value: sheriff-scheduling
+    value: Sheriff-Scheduling
   - name: ROLE
     displayName: Role
     description: Role
