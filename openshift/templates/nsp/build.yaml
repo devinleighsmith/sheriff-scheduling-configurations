@@ -35,6 +35,7 @@ objects:
         - 0.0.0.0/0
       servicePorts:
         - tcp/443
+        - tcp/80
 
   - kind: NetworkSecurityPolicy
     apiVersion: security.devops.gov.bc.ca/v1alpha1
